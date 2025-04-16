@@ -1,6 +1,6 @@
 ---
 layout: archive
-title: "NEWS"
+title: "NEWSS"
 permalink: /portfolio/
 author_profile: true
 redirect_from:
