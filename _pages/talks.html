@@ -11,6 +11,20 @@ author_profile: true
 
 {% endif %}
 
-{% for post in site.talks reversed %}
+<!-- {% for post in site.talks reversed %}
   {% include archive-single-talk.html %}
+{% endfor %} -->
+
+
+{% assign talks_by_category = site.talks | group_by: "category" %}
+
+{% for group in talks_by_category %}
+  <h2>{{ group.name }}</h2>
+  <ul>
+    {% for talk in group.items %}
+      <li>
+        <!-- <a href="{{ talk.url }}">{{ talk.title }}</a> - {{ talk.date | date: "%B %d, %Y" }} -->
+      </li>
+    {% endfor %}
+  </ul>
 {% endfor %}
