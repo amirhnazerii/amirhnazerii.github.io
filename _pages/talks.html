@@ -23,7 +23,7 @@ author_profile: true
   <ul>
     {% for talk in group.items %}
       <li>
-        <!-- <a href="{{ talk.url }}">{{ talk.title }}</a> - {{ talk.date | date: "%B %d, %Y" }} -->
+        <a href="{{ talk.url }}">{{ talk.title }}</a> - {{ talk.date | date: "%B %d, %Y" }}
       </li>
     {% endfor %}
   </ul>
