@@ -16,10 +16,9 @@ I am an **AI Engineer and Researcher** passionate about developing cutting-edge 
 
 ## 💼 Work Experience  
 
-### **Associate AI Engineer** - *JTEKT North America* (2024 - Present)  
+### **Associate AI Engineer** - *JTEKT North America* (2025- Present)  
 🚀 Leading AI-driven initiatives in an **Azure-based** environment:  
 - Developed an AI-powered **technical assistant** to **automate knowledge retrieval and report generation**.  
-- **Doubled** report generation speed while enhancing coherence and reference validation.  
 - Optimized **RAG pipelines**, LLM fine-tuning, and vector database integration.  
 - **Tech Stack:** `Azure`, `GPT-4o`, `LangChain`, `LanceDB`, `BeautifulSoup`.  
 
