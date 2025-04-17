@@ -18,9 +18,9 @@ redirect_from:
 ## WORK EXPERIENCE
 
 ### Associate AI Engineer  
-**JTEKT North America, 2024 - current**  
+**JTEKT North America, 2025- current**  
 - Leading a team of technical staff & data engineers to develop an AI-powered technical assistant that retrieves knowledge from databases and generates new technical reports within an Azure-based application.
-- Achieved a 100% increase in report generation speed while enhancing content integrity, coherence, and reference validation.
+<!-- - Achieved a 100% increase in report generation speed while enhancing content integrity, coherence, and reference validation. -->
 - Designed and optimized workflows for data wrangling, retrieval-augmented generation (RAG), and large language model (LLM) fine-tuning.
 - Leveraged Azure Services, OpenAI GPT-4o, vector databases, LangChain, LanceDB, and BeautifulSoup to streamline AI-driven knowledge retrieval and report generation.
 
