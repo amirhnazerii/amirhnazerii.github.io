@@ -1,0 +1,131 @@
+# Recovering from Accidental Git Commits (Large Files Edition)
+
+We've all been there. In the heat of development, you might accidentally commit a file to your local Git repository – maybe a bulky dataset, model parameters, a massive media asset, or something else that makes your repository groan under its weight. When you try to push, you're often met with a stern rejection from platforms like GitHub due to file size limits.
+
+This guide provides a clear, step-by-step manual for beginner to intermediate GitHub users on how to rectify these accidental large file commits, focusing on preventing future issues and, when necessary, surgically removing the oversized baggage from your repository's history.
+
+### The Problem: When Git Gets Too Big
+
+Imagine the scenario: you're working on a computer vision project and inadvertently add a hefty dataset file, say `datasets/coco_dataset2017/instances_train2017.json` weighing in at a hefty 448 MB. When you attempt to share your work with the remote repository, you encounter the dreaded error:
+
+```
+remote: error: File datasets/coco_dataset2017/instances_train2017.json is 448.02 MB; this exceeds GitHub's file size limit of 100.00 MB
+remote: error: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.
+To https://github.com/your_username/your_repository.git
+ ! [remote rejected] master -> master (pre-receive hook declined)
+error: failed to push some refs to 'https://github.com/your_username/your_repository.git'
+```
+
+This error signals that GitHub is not happy with the oversized file in your commit. The good news is, you can fix this!
+
+### The Solution: A Step-by-Step Guide to Recovery
+
+Here's a comprehensive approach to address accidental large file commits:
+
+**Phase 1: Preventing Future Accidents with `.gitignore`**
+
+1.  **Understanding `.gitignore`:** Think of `.gitignore` as your repository's bouncer, deciding which files should never be let into the Git party. Located at the root of your project, it uses patterns to identify files and directories Git should intentionally ignore.
+
+2.  **Creating or Editing `.gitignore`:**
+    * If you don't have one, create it:
+        ```bash
+        touch .gitignore
+        ```
+    * Open `.gitignore` and add the specific large file:
+        ```
+        datasets/coco_dataset2017/instances_train2017.json
+        ```
+    * Consider adding patterns for other potentially large or temporary files:
+        ```
+        *.json
+        *.pth
+        *.pkl
+        outputs/
+        d2/
+        eval_results/
+        ```
+    * Save and commit your `.gitignore` changes:
+        ```bash
+        git add .gitignore
+        git commit -m "Add .gitignore to ignore large dataset file"
+        ```
+
+**Phase 2: Untracking the Already Committed Large File (Locally)**
+
+Adding to `.gitignore` prevents future tracking, but if the large file is already in your Git history, you need to remove it from Git's grip locally.
+
+1.  **Remove from staging and index (keep the local file):**
+    ```bash
+    git rm --cached datasets/coco_dataset2017/instances_train2017.json
+    ```
+
+2.  **Commit the untracking:**
+    ```bash
+    git commit -m "Untrack large dataset file"
+    ```
+
+**Phase 3: Purging the Large File from Git History (Advanced - Handle with Care!)**
+
+To completely eliminate the large file and resolve the push error, you need to rewrite your Git history. **This is a powerful and potentially disruptive action, especially in collaborative projects. Always back up your repository first!**
+
+1.  **Identify the Problematic Commits:** Find the commits where the large file was introduced. Use the following command to see the history of the specific file:
+
+    ```bash
+    git log --oneline --full-history -- datasets/coco_dataset2017/instances_train2017.json
+    ```
+
+    Note down the commit hashes of the commits where the file was *added*.
+
+2.  **Ensure a Clean Working Directory (or Stash Changes):** `git filter-branch` (and `git filter-repo`) won't run with unstaged changes. You have two main options:
+
+    * **Commit Unstaged Changes (if important):**
+        ```bash
+        git add .
+        git commit -m "Temporary commit before history rewrite"
+        ```
+
+    * **Stash Your Unstaged Changes (Recommended if you want to keep them):**
+        ```bash
+        git stash
+        ```
+
+3.  **Rewrite History using `git filter-repo` (Preferred):**
+    * **Installation:** Follow the instructions here: [https://www.google.com/search?q=https://github.com/git-filter-repo/git-filter-repo](https://www.google.com/search?q=https://github.com/git-filter-repo/git-filter-repo).
+    * **Remove the file from history:**
+        ```bash
+        git filter-repo --strip-blobs-matching 'datasets/coco_dataset2017/instances_train2017.json'
+        ```
+
+4.  **Alternatively, Rewrite History using `git filter-branch` (Less Ideal):**
+    * **Run the command:**
+        ```bash
+        git filter-branch --index-filter 'git rm --cached --ignore-unmatch datasets/coco_dataset2017/instances_train2017.json' --prune-empty -- --all
+        ```
+
+5.  **Clean Up Git:** Remove dangling objects:
+    ```bash
+    git reflog expire --expire=now --all
+    git gc --prune=now --aggressive
+    ```
+
+6.  **Force Push the Corrected History:** This overwrites the remote history. **Collaborators will need to take action!**
+
+    ```bash
+    git push --force origin master
+    ```
+
+7.  **Handle Stashed Changes (if you stashed earlier):**
+    ```bash
+    git stash pop
+    ```
+
+    Be prepared for potential merge conflicts.
+
+### Important Considerations for Collaborative Projects
+
+* **Communication is Key:** Inform your team before rewriting history.
+* **Rebasing or Resetting:** Collaborators will likely need to `git pull --rebase origin master` or `git reset --hard origin/master` to align their local repositories.
+
+### Conclusion: A Cleaner, Lighter Repository
+
+By following these steps, you can effectively remove accidental large file commits from your Git repository, ensuring a smoother workflow and adherence to platform limits. Remember to use `.gitignore` diligently to prevent such issues in the future and exercise caution when rewriting history in shared projects. Git is a powerful tool, and understanding how to correct mistakes like this is a valuable skill for any developer.
